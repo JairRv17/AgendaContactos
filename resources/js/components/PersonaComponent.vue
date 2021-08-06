@@ -24,8 +24,7 @@
             </td>
             <td>
                 <button type="button" class="btn btn-primary" v-on:click="onClickContacto()">Contactos</button>
-                <contactos-component :persona="persona" v-if="mostrarContactos"> </contactos-component>
-
+                <!-- <contactos-component :persona="persona" v-if="mostrarContactos"> </contactos-component> -->
             </td>
             <!-- <td>
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" v-on:click="onClickContacto()">
@@ -45,7 +44,6 @@ export default {
     data() {
         return {
             editMode: false,
-            mostrarContactos: false
         };
     },
 
@@ -82,8 +80,8 @@ export default {
             });
         },
         onClickContacto() {
-            this.mostrarContactos = true;
-            console.log(this.persona.id);
+            this.$emit('contacto', this.persona.id);
+            // console.log(this.persona.id);
         }
     }
 };

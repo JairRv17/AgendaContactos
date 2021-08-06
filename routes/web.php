@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PersonaController;
+use App\Http\Controllers\ContactoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,5 +23,8 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+Route::get('contactos/persona/{persona}', [App\Http\Controllers\ContactoController::class, 'persona'])->name('contactos.persona');
+
 Route::apiResource('personas', PersonaController::class);
 Route::apiResource('contactos', ContactoController::class);
+

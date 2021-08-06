@@ -1,6 +1,26 @@
 <template>
     <div class="container">
-        <table class="table">
+        <table class="table" v-if="mostrar">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">persona_id</th>
+                    <th scope="col">Teléfono</th>
+                    <th scope="col">Tipo de teléfono</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <contactos-component
+                    v-for="(contacto) in contactos"
+                    :key="contacto.id"
+                    :contacto="contacto"
+                >
+                </contactos-component>
+            </tbody>
+        </table>
+        <table class="table" v-else>
             <thead class="thead-dark">
                 <tr>
                     <th scope="col">#</th>
@@ -22,6 +42,7 @@
                     :persona="persona"
                     @update="updatePersona(index, ...arguments)"
                     @delete="deletePersona(index)"
+                    @contacto="mostrarContactos(...arguments)"
                 >
                 </persona-component>
             </tbody>
@@ -30,23 +51,26 @@
 </template>
 
 <script>
+    import ContactosComponent from './ContactosComponent.vue';
     import PersonaComponent from './PersonaComponent.vue';
 
     export default {
         data() {
             return {
-                personas: []
+                personas: [],
+                contactos: [],
+                mostrar: false,
+                id_persona: null
             }
         },
 
-        components: { PersonaComponent },
+        components: { PersonaComponent, ContactosComponent },
 
         mounted() {
             axios.get('/personas')
             .then( response => {
                 this.personas = response.data;
             });
-            // console.log("Component mounted.");
         },
 
         methods: {
@@ -55,6 +79,15 @@
             },
             updatePersona(index, persona) {
                 this.personas[index] = persona;
+            },
+            mostrarContactos(id) {
+                console.log(id);
+                this.id_persona = id;
+                this.mostrar = true;
+                axios.get(`contactos/persona/${this.id_persona}`)
+                .then( response => {
+                this.contactos = response.data;
+            });
             }
         }
     };

@@ -1852,15 +1852,78 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  props: ['persona'],
+  props: ['contacto'],
   data: function data() {
-    return {};
+    return {
+      editMode: false
+    };
   },
   mounted: function mounted() {
+    var _this = this;
+
     console.log("Component mounted.");
+    axios.get('/contactos').then(function (response) {
+      _this.personas = response.data;
+    });
   },
-  methods: {}
+  methods: {
+    onClickEdit: function onClickEdit() {
+      this.editMode = true; // console.log(this.contacto.id);
+    },
+    onClickDelete: function onClickDelete() {
+      var _this2 = this;
+
+      axios["delete"]("/contactos/".concat(this.contacto.id)).then(function () {
+        return _this2.$emit('delete');
+      });
+    },
+    onClickUpdate: function onClickUpdate() {
+      var _this3 = this;
+
+      var params = {
+        primer_nombre: this.contacto.primer_nombre,
+        segundo_nombre: this.contacto.segundo_nombre,
+        primer_apellido: this.contacto.primer_apellido,
+        segundo_apellido: this.contacto.segundo_apellido,
+        fecha_nacimiento: this.contacto.fecha_nacimiento,
+        sexo: this.contacto.sexo,
+        fecha: this.contacto.fecha
+      };
+      console.log(params);
+      axios.put("/contactos/".concat(this.contacto.id), params).then(function (response) {
+        _this3.editMode = false;
+        var contacto = response.data;
+
+        _this3.$emit('update', contacto);
+      });
+    },
+    onClickContacto: function onClickContacto() {
+      this.mostrarContactos = true;
+      this.$emit('contacto', contacto);
+      console.log(this.contacto.id);
+    }
+  }
 });
 
 /***/ }),
@@ -1915,7 +1978,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   components: {
@@ -1924,8 +1986,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['persona'],
   data: function data() {
     return {
-      editMode: false,
-      mostrarContactos: false
+      editMode: false
     };
   },
   mounted: function mounted() {
@@ -1963,8 +2024,7 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     onClickContacto: function onClickContacto() {
-      this.mostrarContactos = true;
-      console.log(this.persona.id);
+      this.$emit('contacto', this.persona.id); // console.log(this.persona.id);
     }
   }
 });
@@ -1982,7 +2042,29 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _PersonaComponent_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./PersonaComponent.vue */ "./resources/js/components/PersonaComponent.vue");
+/* harmony import */ var _ContactosComponent_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ContactosComponent.vue */ "./resources/js/components/ContactosComponent.vue");
+/* harmony import */ var _PersonaComponent_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./PersonaComponent.vue */ "./resources/js/components/PersonaComponent.vue");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2015,21 +2097,26 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
-      personas: []
+      personas: [],
+      contactos: [],
+      mostrar: false,
+      id_persona: null
     };
   },
   components: {
-    PersonaComponent: _PersonaComponent_vue__WEBPACK_IMPORTED_MODULE_0__.default
+    PersonaComponent: _PersonaComponent_vue__WEBPACK_IMPORTED_MODULE_1__.default,
+    ContactosComponent: _ContactosComponent_vue__WEBPACK_IMPORTED_MODULE_0__.default
   },
   mounted: function mounted() {
     var _this = this;
 
     axios.get('/personas').then(function (response) {
       _this.personas = response.data;
-    }); // console.log("Component mounted.");
+    });
   },
   methods: {
     deletePersona: function deletePersona(index) {
@@ -2037,6 +2124,16 @@ __webpack_require__.r(__webpack_exports__);
     },
     updatePersona: function updatePersona(index, persona) {
       this.personas[index] = persona;
+    },
+    mostrarContactos: function mostrarContactos(id) {
+      var _this2 = this;
+
+      console.log(id);
+      this.id_persona = id;
+      this.mostrar = true;
+      axios.get("contactos/persona/".concat(this.id_persona)).then(function (response) {
+        _this2.contactos = response.data;
+      });
     }
   }
 });
@@ -2057,6 +2154,7 @@ __webpack_require__.r(__webpack_exports__);
 window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js").default;
 Vue.component('persona-component', __webpack_require__(/*! ./components/PersonaComponent.vue */ "./resources/js/components/PersonaComponent.vue").default);
 Vue.component('personas-component', __webpack_require__(/*! ./components/PersonasComponent.vue */ "./resources/js/components/PersonasComponent.vue").default);
+Vue.component('contactos-component', __webpack_require__(/*! ./components/ContactosComponent.vue */ "./resources/js/components/ContactosComponent.vue").default);
 var app = new Vue({
   el: '#app'
 });
@@ -37722,8 +37820,141 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c("p", [_vm._v(" " + _vm._s(_vm.persona.primer_nombre) + " ")])
+  return _c("tr", [
+    _c("th", { attrs: { scope: "row" } }, [_vm._v(_vm._s(_vm.contacto.id))]),
+    _vm._v(" "),
+    _c("td", [_vm._v(_vm._s(_vm.contacto.persona_id))]),
+    _vm._v(" "),
+    _vm.editMode
+      ? _c("td", [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.contacto.telefono,
+                expression: "contacto.telefono"
+              }
+            ],
+            staticClass: "form-control",
+            attrs: { type: "text" },
+            domProps: { value: _vm.contacto.telefono },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.$set(_vm.contacto, "telefono", $event.target.value)
+              }
+            }
+          })
+        ])
+      : _c("td", [_vm._v(_vm._s(_vm.contacto.telefono))]),
+    _vm._v(" "),
+    _vm.editMode
+      ? _c("td", [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.contacto.tipo_telefono,
+                expression: "contacto.tipo_telefono"
+              }
+            ],
+            staticClass: "form-control",
+            attrs: { type: "text" },
+            domProps: { value: _vm.contacto.tipo_telefono },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.$set(_vm.contacto, "tipo_telefono", $event.target.value)
+              }
+            }
+          })
+        ])
+      : _c("td", [_vm._v(_vm._s(_vm.contacto.tipo_telefono))]),
+    _vm._v(" "),
+    _vm.editMode
+      ? _c("td", [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.contacto.email,
+                expression: "contacto.email"
+              }
+            ],
+            staticClass: "form-control",
+            attrs: { type: "text" },
+            domProps: { value: _vm.contacto.email },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.$set(_vm.contacto, "email", $event.target.value)
+              }
+            }
+          })
+        ])
+      : _c("td", [_vm._v(_vm._s(_vm.contacto.email))]),
+    _vm._v(" "),
+    _c("td", [
+      _c(
+        "div",
+        {
+          staticClass: "btn-group",
+          attrs: { role: "group", "aria-label": "Basic example" }
+        },
+        [
+          _vm.editMode
+            ? _c(
+                "button",
+                {
+                  staticClass: "btn btn-success",
+                  attrs: { type: "button" },
+                  on: {
+                    click: function($event) {
+                      return _vm.onClickUpdate()
+                    }
+                  }
+                },
+                [_vm._v("Guardar")]
+              )
+            : _c(
+                "button",
+                {
+                  staticClass: "btn btn-warning",
+                  attrs: { type: "button" },
+                  on: {
+                    click: function($event) {
+                      return _vm.onClickEdit()
+                    }
+                  }
+                },
+                [_vm._v("Editar")]
+              ),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-danger",
+              attrs: { type: "button" },
+              on: {
+                click: function($event) {
+                  return _vm.onClickDelete()
+                }
+              }
+            },
+            [_vm._v("Eliminar")]
+          )
+        ]
+      )
+    ])
   ])
 }
 var staticRenderFns = []
@@ -37987,29 +38218,21 @@ var render = function() {
       )
     ]),
     _vm._v(" "),
-    _c(
-      "td",
-      [
-        _c(
-          "button",
-          {
-            staticClass: "btn btn-primary",
-            attrs: { type: "button" },
-            on: {
-              click: function($event) {
-                return _vm.onClickContacto()
-              }
+    _c("td", [
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-primary",
+          attrs: { type: "button" },
+          on: {
+            click: function($event) {
+              return _vm.onClickContacto()
             }
-          },
-          [_vm._v("Contactos")]
-        ),
-        _vm._v(" "),
-        _vm.mostrarContactos
-          ? _c("contactos-component", { attrs: { persona: _vm.persona } })
-          : _vm._e()
-      ],
-      1
-    )
+          }
+        },
+        [_vm._v("Contactos")]
+      )
+    ])
   ])
 }
 var staticRenderFns = []
@@ -38036,37 +38259,75 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "container" }, [
-    _c("table", { staticClass: "table" }, [
-      _vm._m(0),
-      _vm._v(" "),
-      _c(
-        "tbody",
-        _vm._l(_vm.personas, function(persona, index) {
-          return _c("persona-component", {
-            key: persona.id,
-            attrs: { persona: persona },
-            on: {
-              update: function($event) {
-                var i = arguments.length,
-                  argsArray = Array(i)
-                while (i--) argsArray[i] = arguments[i]
-                return _vm.updatePersona.apply(
-                  void 0,
-                  [index].concat(argsArray)
-                )
-              },
-              delete: function($event) {
-                return _vm.deletePersona(index)
-              }
-            }
-          })
-        }),
-        1
-      )
-    ])
+    _vm.mostrar
+      ? _c("table", { staticClass: "table" }, [
+          _vm._m(0),
+          _vm._v(" "),
+          _c(
+            "tbody",
+            _vm._l(_vm.contactos, function(contacto) {
+              return _c("contactos-component", {
+                key: contacto.id,
+                attrs: { contacto: contacto }
+              })
+            }),
+            1
+          )
+        ])
+      : _c("table", { staticClass: "table" }, [
+          _vm._m(1),
+          _vm._v(" "),
+          _c(
+            "tbody",
+            _vm._l(_vm.personas, function(persona, index) {
+              return _c("persona-component", {
+                key: persona.id,
+                attrs: { persona: persona },
+                on: {
+                  update: function($event) {
+                    var i = arguments.length,
+                      argsArray = Array(i)
+                    while (i--) argsArray[i] = arguments[i]
+                    return _vm.updatePersona.apply(
+                      void 0,
+                      [index].concat(argsArray)
+                    )
+                  },
+                  delete: function($event) {
+                    return _vm.deletePersona(index)
+                  },
+                  contacto: function($event) {
+                    return _vm.mostrarContactos.apply(void 0, arguments)
+                  }
+                }
+              })
+            }),
+            1
+          )
+        ])
   ])
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", { staticClass: "thead-dark" }, [
+      _c("tr", [
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("#")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("persona_id")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Teléfono")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Tipo de teléfono")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Email")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Acciones")])
+      ])
+    ])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
