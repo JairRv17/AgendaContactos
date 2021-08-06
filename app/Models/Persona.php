@@ -16,7 +16,8 @@ class Persona extends Model
         'segundo_apellido',
         'fecha_nacimiento',
         'sexo',
-        'fecha'
+        'fecha',
+        'estado'
     ];
     public function contactos()
     {

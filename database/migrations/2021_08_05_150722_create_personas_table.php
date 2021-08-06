@@ -17,6 +17,7 @@ class CreatePersonasTable extends Migration
             $table->date('fecha_nacimiento');
             $table->string('sexo',2);
             $table->date('fecha');
+            $table->char('estado',1)->default('A');
 
             $table->timestamps();
         });

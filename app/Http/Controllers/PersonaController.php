@@ -14,8 +14,8 @@ class PersonaController extends Controller
 
     public function index()
     {
-        // return Persona::where('estado', 'A')->get();
-        return Persona::all();
+        return Persona::where('estado', 'A')->get();
+        // return Persona::all();
     }
 
     public function store(Request $request)
@@ -63,6 +63,7 @@ class PersonaController extends Controller
     public function destroy($id)
     {
         $persona = Persona::find($id);
-        $persona->delete();
+        $persona->estado = 'I';
+        $persona->update();
     }
 }
