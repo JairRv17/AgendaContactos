@@ -13,9 +13,11 @@
             </thead>
             <tbody>
                 <contactos-component
-                    v-for="(contacto) in contactos"
+                    v-for="(contacto, index) in contactos"
                     :key="contacto.id"
                     :contacto="contacto"
+                    @update="updateContacto(index, ...arguments)"
+                    @delete="deleteContacto(index)"
                 >
                 </contactos-component>
             </tbody>
@@ -60,7 +62,6 @@
                 personas: [],
                 contactos: [],
                 mostrar: false,
-                id_persona: null
             }
         },
 
@@ -81,13 +82,18 @@
                 this.personas[index] = persona;
             },
             mostrarContactos(id) {
-                console.log(id);
-                this.id_persona = id;
                 this.mostrar = true;
-                axios.get(`contactos/persona/${this.id_persona}`)
+                axios.get(`contactos/persona/${id}`)
                 .then( response => {
                 this.contactos = response.data;
             });
+            },
+            updateContacto(index, contacto) {
+                this.contactos[index] = contacto;
+                console.log(contacto);
+            },
+            deleteContacto(index) {
+                this.contactos.splice(index, 1);
             }
         }
     };

@@ -19,7 +19,8 @@
                 <div class="btn-group" role="group" aria-label="Basic example">
                     <button type="button" class="btn btn-success" v-on:click="onClickUpdate()" v-if="editMode">Guardar</button>
                     <button type="button" class="btn btn-warning" v-on:click="onClickEdit()" v-else>Editar</button>
-                    <button type="button" class="btn btn-danger" v-on:click="onClickDelete()">Eliminar</button>
+                    <button type="button" class="btn btn-secondary" v-on:click="onClickCancel()" v-if="editMode">Cancelar</button>
+                    <button type="button" class="btn btn-danger" v-on:click="onClickDelete()"  v-else>Eliminar</button>
                 </div>
             </td>
             <td>
@@ -55,6 +56,9 @@ export default {
         onClickEdit() {
             this.editMode = true;
             // console.log(this.persona.id);
+        },
+        onClickCancel() {
+            this.editMode = false;
         },
         onClickDelete() {
             axios.delete(`/personas/${this.persona.id}`)

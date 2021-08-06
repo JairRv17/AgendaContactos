@@ -1866,12 +1866,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: ['contacto'],
   data: function data() {
@@ -1880,48 +1874,38 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   mounted: function mounted() {
-    var _this = this;
-
     console.log("Component mounted.");
-    axios.get('/contactos').then(function (response) {
-      _this.personas = response.data;
-    });
   },
   methods: {
     onClickEdit: function onClickEdit() {
       this.editMode = true; // console.log(this.contacto.id);
     },
+    onClickCancel: function onClickCancel() {
+      this.editMode = false;
+    },
     onClickDelete: function onClickDelete() {
-      var _this2 = this;
+      var _this = this;
 
       axios["delete"]("/contactos/".concat(this.contacto.id)).then(function () {
-        return _this2.$emit('delete');
+        return _this.$emit('delete');
       });
     },
     onClickUpdate: function onClickUpdate() {
-      var _this3 = this;
+      var _this2 = this;
 
       var params = {
-        primer_nombre: this.contacto.primer_nombre,
-        segundo_nombre: this.contacto.segundo_nombre,
-        primer_apellido: this.contacto.primer_apellido,
-        segundo_apellido: this.contacto.segundo_apellido,
-        fecha_nacimiento: this.contacto.fecha_nacimiento,
-        sexo: this.contacto.sexo,
-        fecha: this.contacto.fecha
-      };
-      console.log(params);
-      axios.put("/contactos/".concat(this.contacto.id), params).then(function (response) {
-        _this3.editMode = false;
-        var contacto = response.data;
+        telefono: this.contacto.telefono,
+        tipo_telefono: this.contacto.tipo_telefono,
+        email: this.contacto.email
+      }; // console.log(params);
 
-        _this3.$emit('update', contacto);
+      axios.put("/contactos/".concat(this.contacto.id), params).then(function (response) {
+        _this2.editMode = false;
+        var contacto = response.data;
+        console.log(contacto);
+
+        _this2.$emit('update', contacto);
       });
-    },
-    onClickContacto: function onClickContacto() {
-      this.mostrarContactos = true;
-      this.$emit('contacto', contacto);
-      console.log(this.contacto.id);
     }
   }
 });
@@ -1978,6 +1962,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   components: {
@@ -1995,6 +1980,9 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     onClickEdit: function onClickEdit() {
       this.editMode = true; // console.log(this.persona.id);
+    },
+    onClickCancel: function onClickCancel() {
+      this.editMode = false;
     },
     onClickDelete: function onClickDelete() {
       var _this = this;
@@ -2096,6 +2084,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -2103,8 +2093,7 @@ __webpack_require__.r(__webpack_exports__);
     return {
       personas: [],
       contactos: [],
-      mostrar: false,
-      id_persona: null
+      mostrar: false
     };
   },
   components: {
@@ -2128,12 +2117,17 @@ __webpack_require__.r(__webpack_exports__);
     mostrarContactos: function mostrarContactos(id) {
       var _this2 = this;
 
-      console.log(id);
-      this.id_persona = id;
       this.mostrar = true;
-      axios.get("contactos/persona/".concat(this.id_persona)).then(function (response) {
+      axios.get("contactos/persona/".concat(id)).then(function (response) {
         _this2.contactos = response.data;
       });
+    },
+    updateContacto: function updateContacto(index, contacto) {
+      this.contactos[index] = contacto;
+      console.log(contacto);
+    },
+    deleteContacto: function deleteContacto(index) {
+      this.contactos.splice(index, 1);
     }
   }
 });
@@ -37939,19 +37933,33 @@ var render = function() {
                 [_vm._v("Editar")]
               ),
           _vm._v(" "),
-          _c(
-            "button",
-            {
-              staticClass: "btn btn-danger",
-              attrs: { type: "button" },
-              on: {
-                click: function($event) {
-                  return _vm.onClickDelete()
-                }
-              }
-            },
-            [_vm._v("Eliminar")]
-          )
+          _vm.editMode
+            ? _c(
+                "button",
+                {
+                  staticClass: "btn btn-secondary",
+                  attrs: { type: "button" },
+                  on: {
+                    click: function($event) {
+                      return _vm.onClickCancel()
+                    }
+                  }
+                },
+                [_vm._v("Cancelar")]
+              )
+            : _c(
+                "button",
+                {
+                  staticClass: "btn btn-danger",
+                  attrs: { type: "button" },
+                  on: {
+                    click: function($event) {
+                      return _vm.onClickDelete()
+                    }
+                  }
+                },
+                [_vm._v("Eliminar")]
+              )
         ]
       )
     ])
@@ -38201,19 +38209,33 @@ var render = function() {
                 [_vm._v("Editar")]
               ),
           _vm._v(" "),
-          _c(
-            "button",
-            {
-              staticClass: "btn btn-danger",
-              attrs: { type: "button" },
-              on: {
-                click: function($event) {
-                  return _vm.onClickDelete()
-                }
-              }
-            },
-            [_vm._v("Eliminar")]
-          )
+          _vm.editMode
+            ? _c(
+                "button",
+                {
+                  staticClass: "btn btn-secondary",
+                  attrs: { type: "button" },
+                  on: {
+                    click: function($event) {
+                      return _vm.onClickCancel()
+                    }
+                  }
+                },
+                [_vm._v("Cancelar")]
+              )
+            : _c(
+                "button",
+                {
+                  staticClass: "btn btn-danger",
+                  attrs: { type: "button" },
+                  on: {
+                    click: function($event) {
+                      return _vm.onClickDelete()
+                    }
+                  }
+                },
+                [_vm._v("Eliminar")]
+              )
         ]
       )
     ]),
@@ -38265,10 +38287,24 @@ var render = function() {
           _vm._v(" "),
           _c(
             "tbody",
-            _vm._l(_vm.contactos, function(contacto) {
+            _vm._l(_vm.contactos, function(contacto, index) {
               return _c("contactos-component", {
                 key: contacto.id,
-                attrs: { contacto: contacto }
+                attrs: { contacto: contacto },
+                on: {
+                  update: function($event) {
+                    var i = arguments.length,
+                      argsArray = Array(i)
+                    while (i--) argsArray[i] = arguments[i]
+                    return _vm.updateContacto.apply(
+                      void 0,
+                      [index].concat(argsArray)
+                    )
+                  },
+                  delete: function($event) {
+                    return _vm.deleteContacto(index)
+                  }
+                }
               })
             }),
             1
