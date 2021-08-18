@@ -20,7 +20,7 @@ class PersonaController extends Controller
 
     public function store(Request $request)
     {
-        // Persona::create($request->all());
+        // $persona = Persona::create($request->all());
         $persona = new Persona();
         $persona->primer_nombre = $request->primer_nombre;
         $persona->segundo_nombre = $request->segundo_nombre;
@@ -31,18 +31,9 @@ class PersonaController extends Controller
         $persona->fecha = $request->fecha;
 
         $persona->save();
+
         return $persona;
     }
-
-    // public function show($id)
-    // {
-
-    // }
-
-    // public function edit($id)
-    // {
-
-    // }
 
     public function update(Request $request, $id)
     {
