@@ -23,14 +23,10 @@ class ContactoController extends Controller
         return $contacto;
     }
 
-    public function create()
-    {
-
-    }
-
     public function store(Request $request)
     {
         $contacto = new Contacto();
+        $contacto->persona_id = $request->persona_id;
         $contacto->telefono = $request->telefono;
         $contacto->tipo_telefono = $request->tipo_telefono;
         $contacto->email = $request->email;

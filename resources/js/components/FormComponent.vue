@@ -23,7 +23,7 @@
             </div>
             <div class="mb-3">
                 <label class="form-label">Sexo</label>
-                <select class="form-select"  id="sexo" v-model="sexo">
+                <select class="custom-select"  id="sexo" v-model="sexo">
                     <option value="M">Masculino</option>
                     <option value="F">Femenino</option>
                 </select>
